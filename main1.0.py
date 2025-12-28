@@ -52,7 +52,8 @@ class App(CTk):
         super().__init__()
         self.USER = "ananim"
         self.ICON = 0
-
+        self.HOST = "0"
+        self.PORT = 8080
         self.geometry("600x400")
         self.configure(fg_color="#7a6c77")
         self.title("logiktolk")
@@ -113,8 +114,30 @@ class App(CTk):
         self.btn_send_mess = MyBtn(self.frame_chat,text="send",w=100,h=50,command=self.send_mess)
         self.btn_send_mess.place(x=420,y=320)
 
+        self.frame_start = CTkFrame(self,width=600,height=400,fg_color="#7a6c77")
+        self.frame_start.place(x=0,y=0)
+        self.frame_start.place(x=0,y=0)
+        self.box_port = CTkEntry(self.frame_start,width=250,height=50,fg_color=BLUE,
+                                 corner_radius=25,placeholder_text="port")
+        self.box_port.place(x=100,y=150)
+        self.box_host = CTkEntry(self.frame_start,width=250,height=50,fg_color=BLUE,
+                                 corner_radius=25,placeholder_text="port")
+        self.box_host.place(x=100,y=220)
+        
+        self.btn_begin = MyBtn(self.frame_start,text="begin",w=100,h=50,command=self.begin)
+        self.btn_begin.place(x=420,y=320)
 
+    def begin(self):
+        self.PORT = int(self.box_port.get())
+        self.HOST = int(self.box_host.get())
+        self.frame_start.destroy()
+
+    def start(self):
+        self.HOST = self.int_host.get()
+        self.PORT = int(self.input_port.get())
+        self.frame_start.destroy()
     def open_name(self):
+
         self.new_x=-350
         def anime():
             self.new_x += 10
@@ -161,7 +184,7 @@ class App(CTk):
         try:
                 
                 self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.sock.connect(("0.tcp.eu.ngrok.io", 18893))
+                self.sock.connect((f"{self.HOST}.tcp.eu.ngrok.io", self.PORT))
                 self.sock.send(f"{self.USER}|{self.ICON}".encode())
                 Mess(self.all_mess,self.USER,self.ICON,"hello",anchor="w")
                 input=threading.Thread(target=self.input_mess, daemon=True)
